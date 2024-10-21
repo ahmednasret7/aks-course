@@ -4,39 +4,38 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  # You can define any additional variables if needed
+  # Define any additional variables if needed
 
 steps:
   # Checkout the code from your repository (this pulls in the .tf files as well)
   - checkout: self
 
   # Install Terraform
-  - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
+  - task: TerraformInstaller@0
     inputs:
-      terraformVersion: '1.5.0'  # Specify the version of Terraform you are using
+      terraformVersion: '1.5.0'
 
   # Initialize Terraform
-  - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV1@0
+  - task: TerraformTaskV1@0
     inputs:
       provider: 'azurerm'
       command: 'init'
-      workingDirectory: '$(System.DefaultWorkingDirectory)'  # Use current directory (where the YAML and .tf files are located)
-      backendServiceArm: 'AzureServiceConnection'  # Use the Azure service connection for authentication
+      backendServiceArm: 'azure-cli-2024-10-14-06-24-51'  # Ensure this service connection exists
+      backendAzureRmResourceGroupName: 'rg-containerapps-workshop1'
+      workingDirectory: '$(System.DefaultWorkingDirectory)'  # Specify working directory
 
   # Terraform Plan
-  - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV1@0
+  - task: TerraformTaskV1@0
     inputs:
       provider: 'azurerm'
       command: 'plan'
-      workingDirectory: '$(System.DefaultWorkingDirectory)'  # Use current directory
       commandOptions: '-var-file="terraform.tfvars" -out=plan.out'
-      backendServiceArm: 'AzureServiceConnection'  # Use the same service connection
+      environmentServiceNameAzureRM: 'azure-cli-2024-10-14-06-24-51'
 
   # Terraform Apply
-  - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV1@0
+  - task: TerraformTaskV1@0
     inputs:
       provider: 'azurerm'
       command: 'apply'
-      workingDirectory: '$(System.DefaultWorkingDirectory)'  # Use current directory
-      commandOptions: '-auto-approve "plan.out"'
-      backendServiceArm: 'AzureServiceConnection'  # Use the same service connection
+      commandOptions: '-auto-approve plan.out'
+      environmentServiceNameAzureRM: 'azure-cli-2024-10-14-06-24-51'
