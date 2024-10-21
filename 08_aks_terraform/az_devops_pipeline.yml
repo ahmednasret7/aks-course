@@ -17,7 +17,6 @@ steps:
     inputs:
       provider: 'azurerm'
       command: 'init'
-      workingDirectory: '$(System.DefaultWorkingDirectory)/08_aks_terraform'
       backendServiceArm: 'azure-cli-2024-10-14-06-24-51'
       backendAzureRmResourceGroupName: 'rg-containerapps-workshop1'
       backendAzureRmStorageAccountName: 'aksstorage001978'
@@ -29,8 +28,7 @@ steps:
     inputs:
       provider: 'azurerm'
       command: 'plan'
-      workingDirectory: '$(System.DefaultWorkingDirectory)/08_aks_terraform'
-      commandOptions: '-var-file=variables.tf -out=plan.out'
+      commandOptions: '-var-file="terraform.tfvars" -out=plan.out'
       environmentServiceNameAzureRM: 'azure-cli-2024-10-14-06-24-51'
 
   # Terraform Apply
@@ -38,6 +36,5 @@ steps:
     inputs:
       provider: 'azurerm'
       command: 'apply'
-      workingDirectory: '$(System.DefaultWorkingDirectory)/08_aks_terraform'
       commandOptions: '-auto-approve plan.out'
       environmentServiceNameAzureRM: 'azure-cli-2024-10-14-06-24-51'
