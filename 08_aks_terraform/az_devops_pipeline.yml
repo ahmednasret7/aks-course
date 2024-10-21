@@ -29,7 +29,7 @@ steps:
     inputs:
       provider: 'azurerm'
       command: 'plan'
-      commandOptions: '-var-file="terraform.tfvars" -out=plan.out'
+      commandOptions: '-var-file="variables.tf" -out=plan.out'
       environmentServiceNameAzureRM: 'azure-cli-2024-10-14-06-24-51'
 
   # Terraform Apply
