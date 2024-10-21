@@ -1,0 +1,42 @@
+trigger: none
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  # You can define any additional variables if needed
+
+steps:
+  # Checkout the code from your repository (this pulls in the .tf files as well)
+  - checkout: self
+
+  # Install Terraform
+  - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
+    inputs:
+      terraformVersion: '1.5.0'  # Specify the version of Terraform you are using
+
+  # Initialize Terraform
+  - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV1@0
+    inputs:
+      provider: 'azurerm'
+      command: 'init'
+      workingDirectory: '$(System.DefaultWorkingDirectory)'  # Use current directory (where the YAML and .tf files are located)
+      backendServiceArm: 'AzureServiceConnection'  # Use the Azure service connection for authentication
+
+  # Terraform Plan
+  - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV1@0
+    inputs:
+      provider: 'azurerm'
+      command: 'plan'
+      workingDirectory: '$(System.DefaultWorkingDirectory)'  # Use current directory
+      commandOptions: '-var-file="terraform.tfvars" -out=plan.out'
+      backendServiceArm: 'AzureServiceConnection'  # Use the same service connection
+
+  # Terraform Apply
+  - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV1@0
+    inputs:
+      provider: 'azurerm'
+      command: 'apply'
+      workingDirectory: '$(System.DefaultWorkingDirectory)'  # Use current directory
+      commandOptions: '-auto-approve "plan.out"'
+      backendServiceArm: 'AzureServiceConnection'  # Use the same service connection
