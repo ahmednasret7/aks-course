@@ -1,5 +1,5 @@
 resource_group_name = "rg-aks-cluster"
-location            = "swedencentral"
+location            = "westeurope"
 cluster_name        = "aks-cluster"
 kubernetes_version  = "1.30.4"
 system_node_count   = 3
