@@ -18,9 +18,11 @@ steps:
     inputs:
       provider: 'azurerm'
       command: 'init'
-      backendServiceArm: 'azure-cli-2024-10-14-06-24-51'  # Ensure this service connection exists
+      backendServiceArm: 'azure-cli-2024-10-14-06-24-51'
       backendAzureRmResourceGroupName: 'rg-containerapps-workshop1'
-      workingDirectory: '$(System.DefaultWorkingDirectory)'  # Specify working directory
+      backendAzureRmStorageAccountName: 'aksstorage001978'
+      backendAzureRmContainerName: 'blobcontainer'
+      backendAzureRmKey: 'terraform.tfstate'
 
   # Terraform Plan
   - task: TerraformTaskV1@0
