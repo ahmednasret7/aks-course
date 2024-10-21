@@ -22,6 +22,7 @@ steps:
       backendAzureRmStorageAccountName: 'aksstorage001978'
       backendAzureRmContainerName: 'blobcontainer'
       backendAzureRmKey: 'terraform.tfstate'
+      workingDirectory: '$(System.DefaultWorkingDirectory)/08_aks_terraform'
 
   # Terraform Plan
   - task: TerraformTaskV1@0
@@ -30,6 +31,7 @@ steps:
       command: 'plan'
       commandOptions: '-var-file="terraform.tfvars" -out=plan.out'
       environmentServiceNameAzureRM: 'azure-cli-2024-10-14-06-24-51'
+      workingDirectory: '$(System.DefaultWorkingDirectory)/08_aks_terraform'
 
   # Terraform Apply
   - task: TerraformTaskV1@0
@@ -38,3 +40,4 @@ steps:
       command: 'apply'
       commandOptions: '-auto-approve plan.out'
       environmentServiceNameAzureRM: 'azure-cli-2024-10-14-06-24-51'
+      workingDirectory: '$(System.DefaultWorkingDirectory)/08_aks_terraform'
